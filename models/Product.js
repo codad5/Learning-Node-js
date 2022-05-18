@@ -15,7 +15,7 @@ class Product {
     }
 
     static findById(id){
-        let sql = `SELECT * FROM products WHERE product_id = '${id}';`;
+        let sql = `SELECT * FROM products WHERE product_id = "${id}"; `;
 
         return db.execute(sql)
     }

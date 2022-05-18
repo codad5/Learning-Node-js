@@ -6,6 +6,16 @@ var http = require('http').Server(app)
 var io = require('socket.io')(http)
 var mongoose = require("mongoose")
 
-app.use(express.static('index.html'))
+app.use(express.static(__dirname +'\\public'))
 
-console.log(__dirname)
+// console.log(__dirname+'\\index.html')
+
+app.get('/getreq', (req, res, next) => {
+    console.log(req.location)
+    // res.sendFile(__dirname+'/public/signup.html');
+    next()
+})
+
+const server = http.listen(5000, () => {
+    console.log("server started at port ", server.address().port);
+})
