@@ -14,8 +14,8 @@ app.use(express.static(__dirname))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-// const dbUrl = 'mongodb://Codad5:Codad5@learningnode-shard-00-00.ipsst.mongodb.net:27017,learningnode-shard-00-01.ipsst.mongodb.net:27017,learningnode-shard-00-02.ipsst.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-twcbwj-shard-0&authSource=admin&retryWrites=true&w=majority';
-const dbUrl = 'mongodb+srv://user:user@learningnode.ipsst.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+const dbUrl = 'mongodb://127.0.0.1:27017/cooker';
+// const dbUrl = 'mongodb+srv://user:user@learningnode.ipsst.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 let Messagemodel = mongoose.model("message", {
     name:String, 
     message:String
@@ -27,6 +27,7 @@ mongoose.connect(dbUrl, (err) => {
 
 app.get('/message', (req, res) => {
     Messagemodel.find({}, (err, messages) => {
+        if(err) res.status(500)
         res.send(messages)
     })
     // res.send(message)
@@ -42,13 +43,14 @@ app.get('/app', (req, res) => {
 })
 
 
-app.post('/message', (req, res) => {
+app.post('/message', (req, res, next) => {   
 if (req.body.name.length > 0 && req.body.message.length > 0) {
     let messaged = new Messagemodel(req.body)
     messaged.save((err) => {
         console.log(err)
         if(err){
             res.status(500)
+            next()
         }
 
             // message.push(req.body)
